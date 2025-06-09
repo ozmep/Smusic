@@ -1,0 +1,35 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar {
+    background-color: #282c34;
+    padding: 15px;
+  }
+  
+  .nav-container {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #444;
+  }
+  
+
+
+
+
+
+
+

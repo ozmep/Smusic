@@ -1,0 +1,97 @@
+/* רק לתוך קומפוננטת LogReg בלבד */
+.logreg-container {
+  position: relative;
+  width: 340px;
+  max-width: 95vw;
+  margin: 80px auto;
+  padding: 32px;
+  background: #fff;           /* לבן */
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  font-family: "Segoe UI";
+  color: #000;                /* טקסט שחור */
+}
+
+.logreg-container__title {
+  margin: 0 0 24px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.logreg-input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background-color: #fff;
+  font-family: "Segoe UI";
+  font-weight: 400;
+  color: #000;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+.logreg-submit-btn {
+  width: 100%;
+  height: 44px;
+  margin-top: 8px;
+  background-color: #000;     /* שחור */
+  color: #FFF;                /* לבן */
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.logreg-submit-btn:hover:not(:disabled) {
+  background-color: #333;     /* אפור כהה */
+}
+.logreg-submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.logreg-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.logreg-error-message,
+.logreg-success-message {
+  margin: 16px auto 0;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+}
+.logreg-error-message {
+  background: #FFEBEB;
+  color: #FF3B30;
+}
+.logreg-success-message {
+  background: #E6F4EA;
+  color: #28A745;
+}
+
+.logreg-switch-text {
+  margin-top: 24px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #000;
+}
+.logreg-switch-btn {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 6px;
+  text-decoration: underline;
+}
+.logreg-switch-btn:hover {
+  color: #333;
+}

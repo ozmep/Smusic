@@ -1,0 +1,385 @@
+/* General App Styles */
+.app-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #121212; /* Dark background similar to music apps */
+  color: white;
+  border-radius: 16px;
+  font-family: "Segoe UI";
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.songs-header {
+  text-align: center;
+  font-size: 110px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: "Segoe UI";
+      font-weight:700;
+}
+
+.songs-song-list {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 40px;
+  font-family: "Segoe UI";
+
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.song-item:hover {
+  background-color: #333;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.song-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.songs-song-details {
+  font-family: "Segoe UI";
+  flex-grow: 1;
+  color: #fff;
+}
+
+.song-album {
+  font-family: "Segoe UI";
+  font-size: 22px;
+  color: #aaa;
+
+  
+}
+
+.song-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  font-family: "Segoe UI";
+
+}
+
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;           /* center children horizontally */
+  gap: 16px;                
+  margin-top: 20px;
+  width: 100%;     
+}
+
+.edit-input {
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI";
+
+}
+
+.edit-input:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+.duration-inputs {
+  display: flex;
+  gap: 20px;
+}
+
+.duration-inputs input {
+  width: 80px;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-family: "Segoe UI";
+
+}
+
+
+.loading, .error {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+  font-family: "Segoe UI";
+
+}
+
+.error {
+  color: red;
+}
+
+
+
+
+.album-cover {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+.song-title{
+  font-family: "Segoe UI";
+     font-weight: li;
+     font-weight: 700;
+       font-size: 52px;
+
+}
+
+.song-artist{
+  font-family: "Segoe UI";
+font-weight: 500;
+  font-size: 32px;
+
+}
+
+.song-duration{
+  font-family: "Segoe UI";
+font-weight: 300;
+  font-size: 32px;
+
+}
+/* בעמוד פלייליסטיפ */
+.song-cover {
+   
+  width: 100px;
+height: 100px;
+  border-radius: 8px;  
+  margin-right: 20px;
+}
+
+.song-page-title{
+  font-family: "Segoe UI";
+     font-weight: li;
+     font-weight: 700;
+       font-size: 52px;
+       color: #000000;
+       justify-content: center;
+       align-items: center;
+        text-align: center;
+        display: flex;
+}
+
+.song-page-artist{
+  font-family: "Segoe UI";
+     font-weight: li;
+     font-weight: 500;
+       font-size: 42px;
+       color: #000000;
+          justify-content: center;
+       align-items: center;
+        text-align: center;
+        display: flex;
+}
+
+.song-page-duration{
+  font-family: "Segoe UI";
+     font-weight: li;
+     font-weight: 300;
+       font-size: 42px;
+       color: #616161;
+          justify-content: center;
+       align-items: center;
+        text-align: center;
+        display: flex;
+}
+.song-page-album{
+  font-family: "Segoe UI";
+     font-weight: li;
+     font-weight: 300;
+       font-size: 42px;
+       color: #616161;
+       display: block;
+  margin: 0 auto;
+     justify-content: center;
+       align-items: center;
+        text-align: center;
+        display: flex;
+}
+.songpage-cover{
+  display: block;
+  margin: 0 auto;
+  height: 500px;
+  width: 500px;
+}
+
+.songpage-edit{
+  padding: 6px 12px;
+  font-size: 30px;
+  font-family: "Segoe UI";
+  font-weight: 700;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+.songpage-delete{
+ padding: 6px 12px;
+  font-size: 30px;
+  font-family: "Segoe UI";
+  font-weight: 700;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.song-actions {
+  display: flex;
+  justify-content: center; 
+  gap: 16px;                
+  margin-top: 20px;
+}
+.song-link{
+   color: inherit;       
+  text-decoration: none;
+}
+
+.song-link:hover {
+  text-decoration: underline; 
+}
+
+.add-btn{
+    padding: 6px 12px;
+  font-size: 30px;
+  font-family: "Segoe UI";
+  font-weight: 700;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: fit-content;
+  display: block;
+}
+
+.add-btn:hover{
+    background-color: #535353;
+}
+
+.song-cancel-btn {
+  padding: 14px 22px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI";
+  font-weight: 500;
+    background-color: #000000;
+
+}
+
+.song-cancel-btn:hover {
+  background-color: #cc5936;
+}
+
+
+.song-submit-btn {
+  padding: 14px 22px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI";
+  font-weight: 500;
+  background-color: #000000;
+}
+
+.song-submit-btn:hover {
+  background-color: #85eb33;
+}
+
+/* SONGS PAGEEEEEEEE */
+
+.songpage-cancel-btn {
+  padding: 14px 22px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI";
+  font-weight: 500;
+    background-color: #000000;
+    width: 300px;
+
+}
+
+.songpage-cancel-btn:hover {
+  background-color: #cc5936;
+}
+
+
+.songpage-submit-btn {
+  padding: 14px 22px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI";
+  font-weight: 500;
+  background-color: #000000;
+  width: 300px;
+}
+
+.songpage-submit-btn:hover {
+  background-color: #85eb33;
+}
+
+.actions-songpage{
+   display: flex;
+  justify-content: center; 
+  gap: 16px;                
+  margin-top: 20px;
+}
+
+.songpage-input {
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI";
+width: 1000px;
+}

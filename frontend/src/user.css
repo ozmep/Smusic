@@ -1,0 +1,48 @@
+.user-username {
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: center;       /* centers vertically */
+  font-size: 38px;
+  font-family: "Segoe UI";
+  font-weight: 700;
+  color: black;
+}
+
+.username-div {
+  width: 100%;             
+  display: flex;            
+  justify-content: center;  
+  align-items: center;      
+  box-sizing: border-box;   
+}
+
+.name-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;            
+}
+
+.user-details {
+  font-family: "Segoe UI";
+  flex-grow: 1;
+  color: #fff;
+}
+
+.user-pfp{
+  display: block;
+  margin: 0 auto;
+  height: 200px;
+  width: 200px;
+}
+
+.user-more-details{
+  font-family: "Segoe UI";
+     font-weight: li;
+     font-weight: 500;
+       font-size: 42px;
+       color: #000000;
+          justify-content: center;
+       align-items: center;
+        text-align: center;
+        display: flex;
+}
