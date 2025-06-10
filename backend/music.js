@@ -283,7 +283,7 @@ app.get("/users/:id", async (req, res) => {
         const result = await pool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
 
         if (result.rowCount > 0) {
-            return res.status(200).json(result.rows[0]); // Return the song details
+            return res.status(200).json(result.rows[0]); 
         } else {
             return res.status(404).json({ message: "User not found" });
         }

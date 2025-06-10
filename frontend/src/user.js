@@ -75,8 +75,7 @@ const fetchPlaylists = async () => {
   
 </div>
 
-      <span className="user-more-details">Email: {user.email || 'N/A'}</span>
-       <section className="home-content-section">
+    <section className="home-content-section">
         <h2 className="home-section-title">{user.username}'s Playlists</h2>
         <div className="home-grid">
           {playlists.map(playlist => (
