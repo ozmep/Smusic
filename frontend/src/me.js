@@ -29,7 +29,6 @@ const Me = ({ user, setUser }) => {
     }
 
     const data = await res.json();
-    // **Update App.js state** with new user object:
     setUser(data.user);
     setShowNameForm(false);
   };
