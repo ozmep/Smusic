@@ -378,7 +378,7 @@ app.get("/playlists", async (req, res) => {
 });
 
 
-app.get("/playlists/user/", async (req, res) => {
+app.get("/playlists/my/", async (req, res) => {
 
 
   if (!req.session.user) {
@@ -387,6 +387,28 @@ app.get("/playlists/user/", async (req, res) => {
 
   try {
  const userId = req.session.user.id;
+
+    const result = await pool.query(
+      `SELECT * FROM playlists WHERE user_id = $1;`,
+      [userId]
+    );
+
+    if (result.rowCount > 0) {
+      return res.status(200).json(result.rows);
+    } else {
+      return res.status(404).json({ message: "User does not have any playlists" });
+    }
+  } catch (error) {
+    console.error("Database query error:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+app.get("/playlists/user/:id", async (req, res) => {
+
+  try {
+    const userId = req.params.id;
 
     const result = await pool.query(
       `SELECT * FROM playlists WHERE user_id = $1;`,

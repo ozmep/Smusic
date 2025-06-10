@@ -15,6 +15,7 @@ import NotFound from "./NotFound";
 import Songpage from './Songpage';
 import Album from "./Album";
 import User from './user';
+import Me from './me';
 
 import defaultProfilePic from './images/defaultProfilePic.jpg';
 
@@ -66,7 +67,7 @@ function App() {
       <header className="navbar">
         {currentUser && (
           <div className="nav-user-info">
-            <Link to="/user">
+         <Link to="/me"> 
               <img
                 src={currentUser.profilepic || defaultProfilePic}
                 alt={`${currentUser.username}'s avatar`}
@@ -97,6 +98,8 @@ function App() {
           <Route path="/LogReg" element={<LogReg setCurrentUser={setCurrentUser} />} />
           <Route path="/songs" element={<Songs />} />
           <Route path="/songs/:id" element={<Songpage />} />
+          <Route path="/user/:id" element={<User />} />
+
           <Route
             path="/playlists"
             element={currentUser ? <Playlists /> : <LogReg setCurrentUser={setCurrentUser} />}
@@ -106,9 +109,9 @@ function App() {
             element={currentUser ? <Playlistpage user={currentUser} setUser={setCurrentUser} /> : <LogReg setCurrentUser={setCurrentUser} />}
           />
           <Route path="/album/:name" element={<Album />} />
-          <Route
-            path="/user"
-            element={currentUser ? <User user={currentUser} setUser={setCurrentUser} /> : <LogReg setCurrentUser={setCurrentUser} />}
+         <Route
+            path="/me"
+            element={currentUser ? <Me user={currentUser} setUser={setCurrentUser} /> : <LogReg setCurrentUser={setCurrentUser} />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>

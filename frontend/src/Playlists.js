@@ -32,7 +32,7 @@ const Playlists = () => {
   const fetchPlaylists = async () => {
     
     try {
-      const response = await fetch('http://localhost:2000/playlists/user/', {
+      const response = await fetch('http://localhost:2000/playlists/my/', {
       credentials: 'include' 
     });
       if (!response.ok) throw new Error(`HTTP error ${response.status}`);
