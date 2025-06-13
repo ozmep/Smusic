@@ -15,19 +15,30 @@ const Playlists = () => {
     setNewPlaylist({ ...newplaylist, [e.target.name]: e.target.value });
   };
 
-  const handleCreateClick = () => {
-    fetch('http://localhost:2000/playlists/create', {
+const handleCreateClick = async () => {
+  try {
+    const response = await fetch('http://localhost:2000/playlists/create', {
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
-      credentials: 'include' ,
+      credentials: 'include',
       body: JSON.stringify({
         name: newplaylist.name,
         cover: newplaylist.cover
       })
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to create playlist: ${response.status} - ${errorData.message || 'Unknown error'}`);
+    }
+
     setShowCreateForm(false);
-    setTimeout(() => { fetchPlaylists(); }, 20);
-  };
+    await fetchPlaylists();
+
+  } catch (error) {
+    console.error('Error creating playlist:', error);
+  }
+};
 
   const fetchPlaylists = async () => {
     
@@ -89,6 +100,7 @@ const Playlists = () => {
               className="create-lines"
               placeholder="Name"
               maxLength={255}
+              required
             />
             <input
               type="text"

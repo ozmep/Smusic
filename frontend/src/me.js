@@ -39,6 +39,7 @@ const Me = ({ user, setUser }) => {
 
   return (
     <div className="user-details">
+      <h1 className="me-title">Your Profile</h1>
       <img
         src={user.profilepic || defaultProfilePic}
         alt={user.username}
@@ -53,6 +54,7 @@ const Me = ({ user, setUser }) => {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               className="name-input"
+              required
             />
             <button
               type="button"

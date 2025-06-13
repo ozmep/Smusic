@@ -1,7 +1,7 @@
 .user-username {
   display: flex;
-  justify-content: center;   /* centers horizontally */
-  align-items: center;       /* centers vertically */
+  justify-content: center;  
+  align-items: center;      
   font-size: 38px;
   font-family: "Segoe UI";
   font-weight: 700;
@@ -45,4 +45,13 @@
        align-items: center;
         text-align: center;
         display: flex;
+}
+.me-title{
+   display: flex;
+  justify-content: center;  
+  align-items: center;      
+  font-size: 48px;
+  font-family: "Segoe UI";
+  font-weight: 700;
+  color: black;
 }

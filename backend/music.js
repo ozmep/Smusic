@@ -88,6 +88,23 @@ app.get("/songs/album/:title", async (req, res) => {
 });
 
 
+
+app.get("/songs/artist/:name", async (req, res) => {
+    const name = decodeURIComponent( req.params.name); 
+    try {
+        const result = await pool.query(`SELECT * FROM songs WHERE artist = $1;`, [name]);
+
+        if (result.rowCount > 0) {
+            return res.status(200).json(result.rows); // Return the song details
+        } else {
+            return res.status(404).json({ message: "Song not found" });
+        }
+    } catch (error) {
+        console.error("Database query error:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 app.post("/songs/add", async (req, res) => {
     const { title, artist, album, duration ,cover} = req.body;
 
@@ -205,7 +222,7 @@ app.patch("/songs/update/:id", async (req, res) => {
     }
 
     const checkEmail = await pool.query(`SELECT * FROM users WHERE email=$1`, [email]);
-    if(checkUser.rows.length>0){
+    if(checkEmail.rows.length>0){
       return res.status(401).json({message: "מייל תפוס"});
     }
     const hashedPassword = await bcrypt.hash(password,10);
@@ -294,7 +311,7 @@ app.get("/users/:id", async (req, res) => {
 });
 
 app.delete("/users/delete/:id", async (req, res) => {
-    const id = req.params.id;
+ const id = req.session.user.id;
     console.log(id);
     try {
         const result = await pool.query(`DELETE FROM users WHERE id = $1;`, [id]);
@@ -346,10 +363,12 @@ app.patch("/users/updatepassword/:id", async (req, res) => {
     const password = req.body.password;
 
     try {
-        const result = await pool.query(
-            `UPDATE users SET password = $1 WHERE id = $2 RETURNING *;`,
-            [password, id]
-        );
+const hashedPassword = await bcrypt.hash(password, saltRounds);
+const result = await pool.query(
+    `UPDATE users SET password = $1 WHERE id = $2 RETURNING *;`,
+    [hashedPassword, id]
+);
+
 
         if (result.rowCount > 0) {
             return res.status(200).json({
@@ -519,6 +538,14 @@ app.delete("/playlists/delete/:id", async (req, res) => {
 app.patch("/playlists/update/:id", async (req, res) => {
     const id = req.params.id;
     const playlist = req.body.playlist;
+     
+        if (!req.session.user || !req.session.user.id) {
+            return res.status(401).json({ message: "User not logged in" });
+        }
+
+        if (req.session.user.id !== playlist.user_id) {
+            return res.status(403).json({ message: "You are not the owner of this playlist" });
+        }
 
     try {
         if (playlist.name) {
@@ -557,64 +584,77 @@ app.patch("/playlists/update/:id", async (req, res) => {
 
 
 
-
 app.post("/playlists/add/:playlist_id", async (req, res) => {
-    const playlist_id = req.params.playlist_id; // Playlist ID from URL
-    const { song_id } = req.body; // Song ID from request body
+  const playlist_id = req.params.playlist_id;
+  const { song_id } = req.body;
 
-    if (!song_id) {
-        return res.status(400).json({ message: "Song ID is required." });
+  if (!req.session.user) {
+    return res.status(401).json({ message: "User not logged in" });
+  }
+
+  if (!song_id) {
+    return res.status(400).json({ message: "Song ID is required." });
+  }
+
+  try {
+    const playlistCheck = await pool.query(
+      `SELECT id, user_id FROM playlists WHERE id = $1;`,
+      [playlist_id]
+    );
+
+    if (playlistCheck.rowCount === 0) {
+      return res.status(404).json({ message: "Playlist not found." });
     }
 
-    try {
-        // Check if the song exists before adding it
-        const songCheck = await pool.query(`SELECT id FROM songs WHERE id = $1;`, [song_id]);
-        if (songCheck.rowCount === 0) {
-            return res.status(404).json({ message: "Song not found." });
-        }
-
-        // Update playlist by appending the new song_id to song_ids array
-        const result = await pool.query(
-            `UPDATE playlists SET song_ids = array_append(song_ids, $1) WHERE id = $2 RETURNING *;`,
-            [song_id, playlist_id]
-        );
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ message: "Playlist not found." });
-        }
-
-                const updatedPlaylist = result.rows[0];
-        const songResult = await pool.query(
-            `SELECT id, title, artist, album, duration,cover FROM songs WHERE id = ANY($1);`,
-            [updatedPlaylist.song_ids]
-        );
-
-        res.status(200).json({
-            id: updatedPlaylist.id,
-            user_id: updatedPlaylist.user_id,
-            name: updatedPlaylist.name,
-            cover:updatedPlaylist.cover,
-            songs: songResult.rows //כל השירים
-        });
-
-        
-    } catch (error) {
-        console.error("Database update error:", error);
-        res.status(500).json({ message: "Internal Server Error" });
+    if (playlistCheck.rows[0].user_id !== req.session.user.id) {
+      return res.status(403).json({ message: "You do not own this playlist." });
     }
+
+    const songCheck = await pool.query(
+      `SELECT id FROM songs WHERE id = $1;`,
+      [song_id]
+    );
+
+    if (songCheck.rowCount === 0) {
+      return res.status(404).json({ message: "Song not found." });
+    }
+
+    const result = await pool.query(
+      `UPDATE playlists SET song_ids = array_append(song_ids, $1) WHERE id = $2 RETURNING *;`,
+      [song_id, playlist_id]
+    );
+
+    const updatedPlaylist = result.rows[0];
+
+    const songResult = await pool.query(
+      `SELECT id, title, artist, album, duration, cover FROM songs WHERE id = ANY($1);`,
+      [updatedPlaylist.song_ids]
+    );
+
+    res.status(200).json({
+      id: updatedPlaylist.id,
+      user_id: updatedPlaylist.user_id,
+      name: updatedPlaylist.name,
+      cover: updatedPlaylist.cover,
+      songs: songResult.rows
+    });
+
+  } catch (error) {
+    console.error("Database update error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 
 app.delete("/playlists/remove/:playlist_id", async (req, res) => {
-    const playlist_id = req.params.playlist_id; // Playlist ID from URL
-    const { song_id } = req.body; // Song ID from request body
+    const playlist_id = req.params.playlist_id; 
+    const { song_id } = req.body; 
 
     if (!song_id) {
         return res.status(400).json({ message: "Song ID is required."  });
     }
 
     try {
-        // Check if playlist exists
         const playlistResult = await pool.query(`SELECT * FROM playlists WHERE id = $1;`, [playlist_id]);
         if (playlistResult.rowCount === 0) {
             return res.status(404).json({ message: "Playlist not found." });
@@ -622,15 +662,12 @@ app.delete("/playlists/remove/:playlist_id", async (req, res) => {
 
         const playlist = playlistResult.rows[0];
 
-        // Check if the song is in the playlist
         if (!playlist.song_ids.includes(song_id)) {
             return res.status(400).json({ message: "Song is not in the playlist." });
         }
 
-        // Remove the song from the array
         const updatedSongIds = playlist.song_ids.filter(id => id !== song_id);
 
-        // Update the playlist with the new song_ids array
         const updateResult = await pool.query(
             `UPDATE playlists SET song_ids = $1 WHERE id = $2 RETURNING *;`,
             [updatedSongIds, playlist_id]

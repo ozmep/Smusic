@@ -44,11 +44,12 @@ const Songs = () => {
       setLoading(false);
     }
   };
- const handleAddClick = () => {
-    const durationinseconds =
-      parseInt(newsong.minutes) * 60 + parseInt(newsong.seconds);
+const handleAddClick = async () => {
+  const durationinseconds =
+    parseInt(newsong.minutes) * 60 + parseInt(newsong.seconds);
 
-    fetch('http://localhost:2000/songs/add', {
+  try {
+    const response = await fetch('http://localhost:2000/songs/add', {
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
@@ -59,13 +60,20 @@ const Songs = () => {
         cover: newsong.cover,
       }),
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to add song: ${response.status} - ${errorData.message || 'Unknown error'}`);
+    }
+
     setNewSong({ title: '', artist: '', album: '', duration: '', cover: '' });
     setShowAddForm(false);
-    setTimeout(() => {
-      fetchSongs();
-    }, 10);
-  };
+    await fetchSongs();
 
+  } catch (error) {
+    console.error('Error adding song:', error);
+  }
+};
   const handleAddChange = (e) => {
     setNewSong({ ...newsong, [e.target.name]: e.target.value });
   };
@@ -85,7 +93,7 @@ const Songs = () => {
             {songs.map((song) => (
               <li key={song.id} className="song-item">
                 <img
-                  src={song.cover}
+                  src={song.cover || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSzgk1mI_XO8j2zdw46YC7FftcItSNU0pisQ&s'}
                   alt={`${song.title} album`}
                   className="album-cover"
                 />
@@ -93,8 +101,7 @@ const Songs = () => {
                     <div className="songs-song-details">
                                  <Link to={`/songs/${song.id}`} className="song-link">  <span className="song-title">{song.title}</span>{' '} </Link>
                       <span style={{ fontSize: '20px' }}>by</span>{' '}
-                      <span className="song-artist">{song.artist}</span>{' '}
-                      <span className="song-duration">
+                           <Link to={`/artist/${encodeURIComponent(song.artist)}`} className="song-link">  <span className="song-artist">{song.artist}</span>{' '} </Link>                       <span className="song-duration">
                         ({song.durationFormatted})
                       </span>
        <Link to={`/album/${song.album}`} className="song-link"><span className="song-album">{song.album}</span></Link>                      
@@ -133,6 +140,7 @@ const Songs = () => {
                 className="edit-input"
                 placeholder="Title"
                 maxLength={255}
+                required
               />
               <input
                 type="text"
@@ -142,6 +150,7 @@ const Songs = () => {
                 className="edit-input"
                 placeholder="Artist"
                 maxLength={255}
+                required
               />
               <input
                 type="text"
@@ -151,6 +160,7 @@ const Songs = () => {
                 className="edit-input"
                 placeholder="Album"
                 maxLength={255}
+                required
               />
               <input
                 type="number"
@@ -159,7 +169,7 @@ const Songs = () => {
                 onChange={handleAddChange}
                 className="edit-input"
                 placeholder="Minutes"
-             
+             min="0"
               />
               <input
                 type="number"
@@ -168,6 +178,8 @@ const Songs = () => {
                 onChange={handleAddChange}
                 className="edit-input"
                 placeholder="Seconds"
+                required
+                min="0"
                  
               />
               <input

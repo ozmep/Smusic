@@ -1,9 +1,8 @@
-/* General App Styles */
 .app-container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 40px;
-  background-color: #121212; /* Dark background similar to music apps */
+  background-color: #121212; 
   color: white;
   border-radius: 16px;
   font-family: "Segoe UI";
@@ -87,7 +86,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center; 
-  align-items: center;           /* center children horizontally */
+  align-items: center;           
   gap: 16px;                
   margin-top: 20px;
   width: 100%;     
@@ -382,4 +381,19 @@ height: 100px;
   transition: all 0.3s ease;
   font-family: "Segoe UI";
 width: 1000px;
+}
+
+.logreg-error-message,
+.logreg-success-message {
+  margin: 16px auto 0;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+}
+.logreg-error-message {
+  background: #FFEBEB;
+  color: #FF3B30;
 }

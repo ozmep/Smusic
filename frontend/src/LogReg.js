@@ -131,15 +131,18 @@ if (meData.loggedIn) {
           />
         )}
 
-        <input
-          className="logreg-input"
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={user.password}
-          onChange={handleChange}
-          required
-        />
+      <input
+  className="logreg-input"
+  type="password"
+  name="password"
+  placeholder="Password"
+  value={user.password}
+  onChange={handleChange}
+  required
+  // pattern="(?=.*[A-Z]).{8,}"
+  // title="Must be 8 characters long and include at least one uppercase letter."
+/>
+
 
         {!isLogin && (
           <input

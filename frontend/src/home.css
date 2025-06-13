@@ -5,7 +5,7 @@ body {
   color: #fff;
 }
 
-/* 404 Styles */
+/* עיצוב של ה404 */
 .notfound-sub,
 .notfound-title {
   text-align: center;
@@ -20,14 +20,14 @@ body {
   font-size: 60px;
 }
 
-/* Home Container */
+/* שוב סדר*/
 .home-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 60px 40px;
 }
 
-/* Welcome Header */
+/* הודעה של ברוך הבא */
 .home-title {
   font-size: 36px;
   font-weight: 700;
@@ -43,7 +43,7 @@ body {
   animation: fadeIn 1s ease-in-out;
 }
 
-/* Section */
+/* תחומים */
 .home-content-section {
   margin-bottom: 50px;
 }
@@ -56,14 +56,14 @@ body {
   display: inline-block;
 }
 
-/* Grid */
+/* סדר */
 .home-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 24px;
 }
 
-/* Card */
+/* כל הקלפים של השירים והפלייליסטים */
 .home-card {
   background: #1a1a1a;
   border-radius: 12px;
@@ -112,7 +112,7 @@ body {
   color: #888;
 }
 
-/* Responsive */
+/* אנימציה שיעלה השם ביפה */
 @media (max-width: 768px) {
   .home-title { font-size: 28px; }
   .home-subtitle { font-size: 16px; }

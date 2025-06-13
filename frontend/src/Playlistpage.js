@@ -24,29 +24,52 @@ const Playlistpage = ({ user, setUser }) => {
     setEditData({ ...editData, cover: playlist.cover });
     setShowCoverForm(true);
   };
-const handleCoverSubmit = (e) => {
+const handleCoverSubmit = async (e) => {
   e.preventDefault();
   const updatedPlaylist = { ...playlist, cover: editData.cover };
-  fetch(`http://localhost:2000/playlists/update/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ playlist: updatedPlaylist }) 
-  });
+  try {
+    const response = await fetch(`http://localhost:2000/playlists/update/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playlist: updatedPlaylist })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json(); 
+      console.error('Failed to update cover:', response.status, errorData);
+      return; 
+    }
+
   setShowCoverForm(false);
-  setTimeout(fetchPlaylist, 30);
+  await fetchPlaylist();
+  } catch (error) {
+            console.error('Error during playlist update:', error);
+   }
 };
 
 
-const handleNameSubmit = (e) => {
+const handleNameSubmit = async (e) => {
   e.preventDefault();
   const updatedPlaylist = { ...playlist, name: editData.name };
-  fetch(`http://localhost:2000/playlists/update/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ playlist: updatedPlaylist }) 
-  });
-  setShowNameForm(false);
-  setTimeout(fetchPlaylist, 30);
+
+  try {
+    const response = await fetch(`http://localhost:2000/playlists/update/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playlist: updatedPlaylist })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to update name: ${response.status} - ${errorData.message || 'Unknown error'}`);
+    }
+
+    setShowNameForm(false);
+    await fetchPlaylist();
+
+  } catch (error) {
+    console.error('Error during playlist name update:', error);
+  }
 };
 
 
@@ -64,23 +87,28 @@ const handleNameSubmit = (e) => {
     }
   };
 
-  const handleRemoveSong = async (songid) => {
-    const confirm = window.confirm("Are you sure you want to delete this song?");
-    if (confirm) {
-      try {
-        const response = await fetch(`http://localhost:2000/playlists/remove/${id}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ song_id: songid })
-        });
-        if (!response.ok) throw new Error('Failed to delte');
-      } catch (err) {
-        console.error('Delete error:', err);
-      }
-      setTimeout(fetchPlaylist, 30);
-    }
-  };
+ const handleRemoveSong = async (songid) => {
+  const confirm = window.confirm("Are you sure you want to delete this song?");
+  if (confirm) {
+    try {
+      const response = await fetch(`http://localhost:2000/playlists/remove/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ song_id: songid })
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to delete song: ${response.status} - ${errorData.message || 'Unknown error'}`);
+      }
+
+      await fetchPlaylist();
+
+    } catch (err) {
+      console.error('Delete error:', err);
+    }
+  }
+};
   const fetchPlaylist = async () => {
     try {
       const response = await fetch(`http://localhost:2000/playlists/${id}`);
@@ -119,29 +147,39 @@ const handleNameSubmit = (e) => {
     if (remainingSeconds > 0) result += `${remainingSeconds}s`;
     return result.trim();
   };
+const HandleAddSong = async () => {
+  if (!selectedSongId) return;
+  try {
+    
+    const response = await fetch(`http://localhost:2000/playlists/add/${id}/`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ song_id: selectedSongId })
+    });
 
-  const HandleAddSong = async () => {
-    if (!selectedSongId) return;
-    try {
-      const response = await fetch(`http://localhost:2000/playlists/add/${id}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ song_id: selectedSongId })
-      });
-      const updated = await response.json();
-      setPlaylist(updated);
-      setShowAddForm(false);
-      setSelectedSongId('');
-    } catch (error) {
-      console.error("Add song error:", error);
+    if (!response.ok) {
+      const error = await response.json();
+      console.error("Add song failed:", error.message || response.status);
+      return;
     }
-  };
+
+    await fetchPlaylist(); 
+    setShowAddForm(false);
+    setSelectedSongId('');
+  } catch (error) {
+    console.error("Add song error:", error);
+  }
+};
 
   const songsNotInPlaylist = songs.filter(
     (song) => !playlist?.songs.some((playlistsong) => playlistsong.id === song.id)
   );
+
   if (!playlist) return <p>Loading...</p>;
-  if(playlist.user_id == user.id){
+
+  
+  if(playlist.user_id === user.id){
   return (
     
     <div className="playlist-header">
@@ -229,10 +267,13 @@ const handleNameSubmit = (e) => {
             </div>
 
             <div>
+
+
               {!showAddForm && (
                 <button onClick={() => setShowAddForm(true)} className="add-to-playlist-button">
                   + Add Song
                 </button>
+                
               )}
               {showAddForm && (
                 <form onSubmit={(e) => { e.preventDefault(); HandleAddSong(); }}>
@@ -254,6 +295,17 @@ const handleNameSubmit = (e) => {
                   </div>
                 </form>
               )}
+                            <button
+  className="share-btn"
+  onClick={() => {
+    const shareUrl = `${window.location.origin}/playlists/${id}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => alert("Playlist link copied to clipboard!"))
+      .catch(() => alert("Failed to copy link."));
+  }}
+>
+  Share
+</button>
             </div>
 
             {playlist.songs.map((song) => (
@@ -265,8 +317,7 @@ const handleNameSubmit = (e) => {
                     className="song-cover"
                   />
                   <Link to={`/songs/${song.id}`} className="song-link"><span className="song-title">{song.title}</span></Link> by{" "}
-                  <span className="song-artist">{song.artist}</span>{" "}
-                  <Link to={`/album/${song.album}`} className="song-link"><span className="song-album">{song.album}</span></Link>{" "}
+                  <Link to={`/artist/${encodeURIComponent(song.artist)}`} className="song-link">  <span className="song-artist">{song.artist}</span>{' '} </Link>                       <Link to={`/album/${song.album}`} className="song-link"><span className="song-album">{song.album}</span></Link>{" "}
                   <span className="playlistpage-song-duration">{fixedDuration(song.duration)}</span>
                 </div>
                 <button

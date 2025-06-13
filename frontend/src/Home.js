@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate , Link } from 'react-router-dom';
+import defaultCover from './images/default_cover.png';
 
 import moment from 'moment';
 import './home.css';
@@ -31,7 +32,7 @@ const [usernames, setUsernames] = useState({});
           const userData = await res.json();
           usernamesMap[id] = userData.username;
         } else {
-          usernamesMap[id] = `User #${id}`; // fallback
+          usernamesMap[id] = `User #${id}`;
         }
       } catch (err) {
         usernamesMap[id] = `User #${id}`;
@@ -79,7 +80,7 @@ const [usernames, setUsernames] = useState({});
         <div className="home-grid">
           {songs.map(song => (
             <div key={song.id} className="home-card">
-               <Link to={`/songs/${song.id}`} className="song-link">     <img src={song.cover} alt={song.title} className="home-cover" /></Link>
+               <Link to={`/songs/${song.id}`} className="song-link">     <img src={song.cover || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSzgk1mI_XO8j2zdw46YC7FftcItSNU0pisQ&s'} alt={song.title} className="home-cover" /></Link>
               <div className="home-card-info">
          <div className="home-title-text">{song.title}</div>
                 <div className="home-subtitle-text">{song.artist}</div>
@@ -96,7 +97,7 @@ const [usernames, setUsernames] = useState({});
           {playlists.map(playlist => (
             <div key={playlist.id} className="home-card">
                   <Link to={`/playlist/${playlist.id}`}>
-                         <img src={playlist.cover} alt={playlist.name} className="home-cover" />
+                         <img src={playlist.cover || defaultCover}  alt={playlist.name} className="home-cover" />
 
               
             </Link>

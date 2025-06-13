@@ -49,7 +49,11 @@ useEffect(() => {
     fetch(`http://localhost:2000/songs/delete/${id}`, { method: 'DELETE' })
       .then((res) => res.json())
       .then(() => {
-navigate(-1);
+if (window.history.length > 1) {
+  navigate(-1);
+} else {
+  navigate('/songs');
+}
       });
     }
   };
@@ -72,12 +76,12 @@ navigate(-1);
   };
 
 
+const handleAddClick = async () => {
+  const durationinseconds =
+    parseInt(newsong.minutes) * 60 + parseInt(newsong.seconds);
 
- const handleAddClick = () => {
-    const durationinseconds =
-      parseInt(newsong.minutes) * 60 + parseInt(newsong.seconds);
-
-    fetch('http://localhost:2000/songs/add', {
+  try {
+    const response = await fetch('http://localhost:2000/songs/add', {
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
@@ -88,13 +92,20 @@ navigate(-1);
         cover: newsong.cover,
       }),
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to add song: ${response.status} - ${errorData.message || 'Unknown error'}`);
+    }
+
     setNewSong({ title: '', artist: '', album: '', duration: '', cover: '' });
     setShowAddForm(false);
-    setTimeout(() => {
-      fetchSong();
-    }, 10);
-  };
+    await fetchSong(); // Assuming fetchSong is an async function
 
+  } catch (error) {
+    console.error('Error adding song:', error);
+  }
+};
   const handleAddChange = (e) => {
     setNewSong({ ...newsong, [e.target.name]: e.target.value });
   };
@@ -155,7 +166,7 @@ navigate(-1);
   />
                       <span className="song-page-title">{song.title}</span>
                      <div> <span style={{ fontSize: '20px' }}>by</span>
-                      <span className="song-page-artist">{song.artist}</span>
+                      <Link to={`/artist/${encodeURIComponent(song.artist)}`} className="song-link"><span className="song-page-artist">{song.artist}</span>{' '} </Link>
                       <span className="song-page-duration">
                         ({song.durationFormatted})
                       </span>
@@ -181,6 +192,8 @@ navigate(-1);
                       onChange={handleEditChange}
                       className="songpage-input"
                       placeholder="Title"
+                      required
+                  
                     />
                     <input
                       type="text"
@@ -189,6 +202,7 @@ navigate(-1);
                       onChange={handleEditChange}
                       className="songpage-input"
                       placeholder="Artist"
+                      required
                     />
                     <input
                       type="text"
@@ -197,6 +211,7 @@ navigate(-1);
                       onChange={handleEditChange}
                       className="songpage-input"
                       placeholder="Album"
+                      required
                     />
                     <div className="duration-inputs">
                       <input
@@ -205,6 +220,8 @@ navigate(-1);
                         value={editedSong.durationMin}
                         onChange={handleEditChange}
                         placeholder="Min"
+                         min = "0"
+
                         required
                       />
                       <input
@@ -213,6 +230,7 @@ navigate(-1);
                         value={editedSong.durationSec}
                         onChange={handleEditChange}
                         placeholder="Sec"
+                       min = "0"
                         required
                       />
                     </div>
